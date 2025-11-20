@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0056D2)),
         useMaterial3: true,
-        fontFamily: 'Tahoma', // Fallback font usually available
+        fontFamily: 'Vazirmatn', // استفاده از فونت وزیرمتن برای نمایش بهتر فارسی
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),

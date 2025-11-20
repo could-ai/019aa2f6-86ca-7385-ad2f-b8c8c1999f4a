@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class CalculatorScreen extends StatefulWidget {
   const CalculatorScreen({super.key});
@@ -26,12 +25,28 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     {'label': 'سردخانه walk-in', 'value': 'walk_in', 'risk_factor': 2.0},
   ];
 
+  // Helper to convert Persian digits to English
+  String _replaceFarsiNumber(String input) {
+    const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const farsi = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    
+    for (int i = 0; i < english.length; i++) {
+      input = input.replaceAll(farsi[i], english[i]);
+    }
+    return input;
+  }
+
   void _calculateAndGo() {
     if (_formKey.currentState!.validate()) {
       // Logic for calculation
       double baseRate = 500000; // Base price in Tomans
-      double value = double.parse(_valueController.text.replaceAll(',', ''));
-      int age = int.parse(_ageController.text);
+      
+      // Clean inputs (remove commas, convert Persian digits)
+      String cleanValue = _replaceFarsiNumber(_valueController.text).replaceAll(',', '');
+      String cleanAge = _replaceFarsiNumber(_ageController.text);
+
+      double value = double.parse(cleanValue);
+      int age = int.parse(cleanAge);
       
       // Find risk factor
       var selectedType = _fridgeTypes.firstWhere((e) => e['value'] == _fridgeType);
@@ -108,6 +123,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   labelText: 'ارزش تقریبی دستگاه (تومان)',
                   prefixIcon: Icon(Icons.attach_money),
                   suffixText: 'تومان',
+                  hintText: 'مثلا: ۵۰,۰۰۰,۰۰۰',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'لطفا ارزش دستگاه را وارد کنید';
@@ -123,6 +139,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 decoration: const InputDecoration(
                   labelText: 'سن دستگاه (سال)',
                   prefixIcon: Icon(Icons.history),
+                  hintText: 'مثلا: ۲',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'لطفا سن دستگاه را وارد کنید';
